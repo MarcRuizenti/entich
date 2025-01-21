@@ -15,24 +15,7 @@ if (!isset($_POST["name_game"]) ||
 {
 	die("ERROR 1: Formulario no enviado");
 }
-$query = "SELECT * FROM creators WHERE id_creator=".$_SESSION["id_creator"];
 
-require_once("db_config.php");
-
-$conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
-
-$result = mysqli_query($conn, $query);
-
-if (!$result){
-    header("Location: login.php");
-	exit();
-}
-
-if (mysqli_num_rows($result) != 1){
-	header("Location: login.php");
-	exit();
-}
-$creator = mysqli_fetch_array($result);
 
 
 $name = trim($_POST["name_game"]);
@@ -103,6 +86,7 @@ VALUES ('{$name}', '{$link}', '{$uniqueFileName}', '{$price}', '{$trailer}')
 
 EOD;
 
+require_once("db_config.php");
 
 $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
@@ -113,7 +97,7 @@ if (!$result){
 }
 
 $id_game = mysqli_insert_id($conn);
-$id_creator = $creator["id_creator"];
+$id_creator = $_SESSION["id_creator"];
 $query2 = <<<EOD
 INSERT INTO creators_games (id_creator, id_game)
 VALUES ('$id_creator', '$id_game')
